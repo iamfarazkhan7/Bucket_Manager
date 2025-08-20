@@ -1,0 +1,35 @@
+# File: docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: bucket_manager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: sh scripts/deploy.sh
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=django-insecure-docker-development-key-change-in-production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/bucket_manager
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - ADMIN_USER=admin
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=admin123
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

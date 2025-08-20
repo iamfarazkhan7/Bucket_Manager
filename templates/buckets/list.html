@@ -1,0 +1,80 @@
+# File: templates/buckets/list.html
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Bucket Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Buckets</h2>
+    <a href="{% url 'buckets:create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create New Bucket
+    </a>
+</div>
+
+{% if buckets %}
+    <div class="row">
+        {% for bucket in buckets %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ bucket.name }}</h5>
+                        <p class="card-text">
+                            {% if bucket.description %}
+                                {{ bucket.description|truncatewords:15 }}
+                            {% else %}
+                                <em class="text-muted">No description</em>
+                            {% endif %}
+                        </p>
+                        <small class="text-muted">Created: {{ bucket.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'buckets:edit' bucket.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            <a href="{% url 'buckets:delete' bucket.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <nav aria-label="Buckets pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-bucket" style="font-size: 4rem; color: #6c757d;"></i>
+        </div>
+        <h4 class="text-muted">No buckets yet</h4>
+        <p class="text-muted">Create your first bucket to get started!</p>
+        <a href="{% url 'buckets:create' %}" class="btn btn-primary btn-lg">Create Your First Bucket</a>
+    </div>
+{% endif %}
+{% endblock %}

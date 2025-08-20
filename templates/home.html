@@ -1,0 +1,60 @@
+# File: templates/home.html
+{% extends 'base.html' %}
+
+{% block title %}Home - Bucket Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 mb-4">Welcome to Bucket Manager</h1>
+        <p class="lead mb-4">
+            Organize your data efficiently with our powerful bucket management system. 
+            Create, manage, and organize your buckets with ease.
+        </p>
+        
+        {% if not user.is_authenticated %}
+            <div class="d-grid gap-2 d-md-block mb-4">
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Get Started</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg">Sign In</a>
+            </div>
+        {% elif user.is_staff %}
+            <div class="d-grid gap-2 d-md-block mb-4">
+                <a href="{% url 'buckets:list' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                <a href="{% url 'buckets:create' %}" class="btn btn-success btn-lg">Create New Bucket</a>
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Access Restricted</h4>
+                <p>Your account doesn't have staff privileges yet. Contact an administrator to get access to the bucket management features.</p>
+            </div>
+        {% endif %}
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🗂️ Organize</h5>
+                        <p class="card-text">Create and manage buckets to organize your data efficiently.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🔒 Secure</h5>
+                        <p class="card-text">Your buckets are private and only accessible to you.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">⚡ Fast</h5>
+                        <p class="card-text">Built with Django for performance and reliability.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

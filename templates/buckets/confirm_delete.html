@@ -1,0 +1,41 @@
+# File: templates/buckets/confirm_delete.html
+{% extends 'base.html' %}
+
+{% block title %}Delete Bucket - Bucket Manager{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3 class="mb-0">Confirm Deletion</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong> This action cannot be undone.
+                </div>
+                
+                <p>Are you sure you want to delete the bucket <strong>"{{ object.name }}"</strong>?</p>
+                
+                {% if object.description %}
+                    <div class="mb-3">
+                        <strong>Description:</strong> {{ object.description }}
+                    </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <strong>Created:</strong> {{ object.created_at|date:"F d, Y \a\t g:i A" }}
+                </div>
+                
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger me-2">
+                        Yes, Delete Bucket
+                    </button>
+                </form>
+                <a href="{% url 'buckets:list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
